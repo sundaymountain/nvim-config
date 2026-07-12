@@ -230,6 +230,21 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function() vim.hl.on_yank() end,
 })
 
+-- [[ Compile & Run C++ ]]
+--  Press <leader>r to compile and run the current file
+vim.keymap.set('n', '<leader>r', function()
+  local file = vim.fn.expand '%:p'
+  local out = vim.fn.expand '%:p:r'
+  local cmd
+  if vim.fn.has 'win32' == 1 then
+    cmd = 'g++ -o "' .. out .. '" "' .. file .. '" && "' .. out .. '.exe"'
+  else
+    cmd = 'g++ -o "' .. out .. '" "' .. file .. '" && "' .. out .. '"'
+  end
+  vim.cmd('terminal ' .. cmd)
+  vim.cmd 'startinsert'
+end, { desc = '[R]un C++ file' })
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
